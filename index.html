@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#d81b60">
     <link rel="manifest" href="manifest.json">
-    
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3142/3142690.png">
@@ -173,8 +172,7 @@
     <div class="divider"></div>
     
     <h3 style="font-size: 1.1em; color: #555; margin-bottom: 15px;">Ficha Técnica:</h3>
-    <div id="listaIngredientes">
-        </div>
+    <div id="listaIngredientes"></div>
     
     <div class="total-container">
         <span style="color: #555; font-size: 0.9em; font-weight: 600; text-transform: uppercase;">Custo Total da Produção</span>
@@ -201,21 +199,24 @@
         }
 
         btnBuscar.disabled = true;
-        mostrarStatus('⏳ Robô pesquisando no mercado...', '#e3f2fd', '#1565c0');
+        mostrarStatus('⏳ Conectando ao Mercado Livre...', '#e3f2fd', '#1565c0');
 
         try {
-            // A MÁGICA: Conectado ao seu servidor oficial no Render
-            const resposta = await fetch(`https://confeitaria-backend-ab9q.onrender.com/api/buscar-preco?nome=${encodeURIComponent(ingrediente)}`);
+            // 🔥 A GRANDE MÁGICA: O celular consulta a API oficial diretamente! Sem intermediários.
+            const urlAPI = `https://api.mercadolibre.com/sites/MLB/search?q=${encodeURIComponent(ingrediente)}`;
+            const resposta = await fetch(urlAPI);
             const dados = await resposta.json();
 
-            if (dados.preco) {
-                inputPreco.value = dados.preco;
-                mostrarStatus(`✅ Sucesso! Preço sugerido: R$ ${dados.preco}`, '#e8f5e9', '#2e7d32');
+            // Verifica se a busca trouxe resultados
+            if (dados.results && dados.results.length > 0) {
+                const precoExato = dados.results[0].price; // Pega o preço do primeiro item
+                inputPreco.value = precoExato;
+                mostrarStatus(`✅ Sucesso! Preço sugerido: R$ ${precoExato}`, '#e8f5e9', '#2e7d32');
             } else {
                 mostrarStatus('❌ Preço não encontrado. Digite manualmente.', '#ffebee', '#c62828');
             }
         } catch (erro) {
-            mostrarStatus('🔌 Erro de conexão com o servidor.', '#ffebee', '#c62828');
+            mostrarStatus('🔌 Erro ao conectar com o Mercado Livre.', '#ffebee', '#c62828');
             console.error(erro);
         } finally {
             btnBuscar.disabled = false;
@@ -245,7 +246,7 @@
         let pesoReceita = parseFloat(document.getElementById('pesoReceita').value);
         const unidadeReceita = document.getElementById('unidadeReceita').value;
 
-        // Conversão automática para gramas/ml
+        // Conversão automática
         if (unidadeEmbalagem === 'kg') pesoEmbalagem = pesoEmbalagem * 1000;
         if (unidadeReceita === 'kg') pesoReceita = pesoReceita * 1000;
 
