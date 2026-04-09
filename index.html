@@ -39,6 +39,7 @@
             box-shadow: 0 4px 20px rgba(0,0,0,0.08);
         }
 
+        /* Aqui está a nossa prova visual! */
         h2 { text-align: center; color: var(--primary); margin-top: 0; margin-bottom: 25px;}
         
         .form-group { margin-bottom: 16px; }
@@ -125,7 +126,7 @@
 <body>
 
 <div class="container">
-    <h2>📝 Nova Encomenda</h2>
+    <h2>📝 Nova Encomenda (V2)</h2>
 
     <form id="formIngrediente">
         <div class="form-group">
@@ -202,21 +203,27 @@
         mostrarStatus('⏳ Conectando ao Mercado Livre...', '#e3f2fd', '#1565c0');
 
         try {
-            // 🔥 A GRANDE MÁGICA: O celular consulta a API oficial diretamente! Sem intermediários.
             const urlAPI = `https://api.mercadolibre.com/sites/MLB/search?q=${encodeURIComponent(ingrediente)}`;
+            
             const resposta = await fetch(urlAPI);
+            
+            // O Dedo Duro: Se o Mercado Livre bloquear, avisamos aqui
+            if (!resposta.ok) {
+                throw new Error(`O servidor respondeu com código ${resposta.status}`);
+            }
+
             const dados = await resposta.json();
 
-            // Verifica se a busca trouxe resultados
             if (dados.results && dados.results.length > 0) {
-                const precoExato = dados.results[0].price; // Pega o preço do primeiro item
+                const precoExato = dados.results[0].price;
                 inputPreco.value = precoExato;
-                mostrarStatus(`✅ Sucesso! Preço sugerido: R$ ${precoExato}`, '#e8f5e9', '#2e7d32');
+                mostrarStatus(`✅ Preço atualizado: R$ ${precoExato}`, '#e8f5e9', '#2e7d32');
             } else {
-                mostrarStatus('❌ Preço não encontrado. Digite manualmente.', '#ffebee', '#c62828');
+                mostrarStatus('❌ Preço não encontrado.', '#ffebee', '#c62828');
             }
         } catch (erro) {
-            mostrarStatus('🔌 Erro ao conectar com o Mercado Livre.', '#ffebee', '#c62828');
+            // O Dedo Duro de verdade! Mostra O QUE quebrou direto na tela
+            mostrarStatus(`🚨 Falha: ${erro.message}`, '#ffebee', '#c62828');
             console.error(erro);
         } finally {
             btnBuscar.disabled = false;
@@ -246,7 +253,6 @@
         let pesoReceita = parseFloat(document.getElementById('pesoReceita').value);
         const unidadeReceita = document.getElementById('unidadeReceita').value;
 
-        // Conversão automática
         if (unidadeEmbalagem === 'kg') pesoEmbalagem = pesoEmbalagem * 1000;
         if (unidadeReceita === 'kg') pesoReceita = pesoReceita * 1000;
 
