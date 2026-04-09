@@ -3,100 +3,270 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
     <meta name="theme-color" content="#d81b60">
     <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3142/3142690.png">
-    <title>Precificação Inteligente</title>
+    
+    <link rel="icon" type="image/png" href="icon-192.png">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    
+    <title>Precificação Thami</title>
     <style>
-        :root { --primary: #d81b60; --background: #fdf0f5; --surface: #ffffff; }
-        body { font-family: -apple-system, sans-serif; background-color: var(--background); padding: 15px; margin: 0; }
-        .container { max-width: 500px; margin: 0 auto; background: var(--surface); padding: 20px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
-        h2 { text-align: center; color: var(--primary); }
+        :root {
+            --primary: #d81b60;
+            --primary-dark: #ad144b;
+            --background: #fdf0f5;
+            --surface: #ffffff;
+            --text: #333333;
+            --border: #e0e0e0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            margin: 0;
+            padding: 15px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: var(--surface);
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        h2 { 
+            text-align: center; 
+            color: var(--primary); 
+            margin-top: 0; 
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        h2 img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%; 
+        }
+        
         .form-group { margin-bottom: 16px; }
-        label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 0.9em; }
-        input, select { width: 100%; padding: 12px; border: 1px solid #e0e0e0; border-radius: 10px; box-sizing: border-box; font-size: 1em; }
-        .btn-busca { background-color: #1976d2; color: white; margin-top: 8px; border: none; padding: 10px; border-radius: 10px; width: 100%; font-weight: bold; cursor: pointer; }
-        .btn-add { background-color: var(--primary); color: white; margin-top: 15px; border: none; padding: 14px; border-radius: 10px; width: 100%; font-weight: bold; }
-        .divider { height: 1px; background-color: #e0e0e0; margin: 25px 0; }
-        .item-lista { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px dashed #eee; }
-        .total-container { margin-top: 25px; padding: 20px; background-color: #f1f8e9; border-radius: 12px; text-align: right; }
-        .total-texto { font-size: 1.4em; font-weight: 800; color: #2e7d32; display: block; }
+        
+        label { 
+            display: block; 
+            margin-bottom: 6px; 
+            font-weight: 600; 
+            font-size: 0.9em;
+            color: #555;
+        }
+        
+        input, select { 
+            width: 100%; 
+            padding: 12px; 
+            border: 1px solid var(--border); 
+            border-radius: 10px; 
+            box-sizing: border-box; 
+            font-size: 1em; 
+            transition: border-color 0.3s;
+            background-color: white;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* O estilo que alinha a caixa de peso com a caixinha de g/kg */
+        .input-com-unidade {
+            display: flex;
+            gap: 5px;
+        }
+
+        .input-com-unidade input { flex: 2; }
+        .input-com-unidade select { flex: 1; padding: 12px 5px; text-align: center;}
+        
+        button {
+            width: 100%; 
+            color: white; 
+            padding: 14px; 
+            border: none;
+            border-radius: 10px; 
+            font-size: 1.05em; 
+            font-weight: bold; 
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        button:active { opacity: 0.8; }
+        
+        .btn-busca { 
+            background-color: #1976d2; 
+            margin-top: 8px; 
+            font-size: 0.9em; 
+            padding: 10px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 8px;
+        }
+        
+        .btn-add { background-color: var(--primary); margin-top: 15px; }
+
+        .divider { height: 1px; background-color: var(--border); margin: 25px 0; }
+        
+        .item-lista { 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 12px 0; border-bottom: 1px dashed var(--border); 
+        }
+        .item-detalhe { display: flex; flex-direction: column; }
+        .item-nome { font-weight: 600; font-size: 1.05em; }
+        .item-peso { font-size: 0.85em; color: #777; margin-top: 2px;}
+        .item-valor { font-weight: bold; color: var(--primary); font-size: 1.1em;}
+        
+        .total-container { 
+            margin-top: 25px; padding: 20px; 
+            background-color: #f1f8e9; border-radius: 12px; 
+            text-align: right; border: 1px solid #c8e6c9;
+        }
+        .total-texto { font-size: 1.4em; font-weight: 800; color: #2e7d32; display: block; margin-top: 5px;}
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>📝 Precificação Thami</h2>
+    <h2>
+        <img src="apple-touch-icon.png" alt="Logo">
+        <span>Precificação Thami</span>
+    </h2>
 
     <form id="formIngrediente">
         <div class="form-group">
-            <label>Ingrediente</label>
+            <label for="nome">Ingrediente</label>
             <input type="text" id="nome" placeholder="Ex: Leite Condensado Moça" required>
-            <button type="button" class="btn-busca" onclick="consultarPreco()">🔍 Ver Preços no Google</button>
+            
+            <button type="button" class="btn-busca" onclick="consultarPreco()">
+                <span>🔍 Ver Preços no Google</span>
+            </button>
         </div>
 
-        <div style="display: flex; gap: 10px;">
+        <div style="display: flex; gap: 12px;">
             <div class="form-group" style="flex: 1;">
-                <label>Embalagem (Peso)</label>
-                <input type="number" id="pesoEmbalagem" step="0.01" required>
+                <label for="pesoEmbalagem">Tamanho da Embalagem</label>
+                <div class="input-com-unidade">
+                    <input type="number" id="pesoEmbalagem" step="0.01" placeholder="Ex: 1 ou 395" required>
+                    <select id="unidadeEmbalagem">
+                        <option value="g">g / ml</option>
+                        <option value="kg">Kg / L</option>
+                    </select>
+                </div>
             </div>
             <div class="form-group" style="flex: 1;">
-                <label>Preço Pago (R$)</label>
-                <input type="number" id="precoPago" step="0.01" placeholder="0.00" required>
+                <label for="precoPago">Preço Pago (R$)</label>
+                <input type="number" id="precoPago" step="0.01" placeholder="Ex: 6.50" required>
             </div>
         </div>
 
         <div class="form-group">
-            <label>Uso na Receita</label>
-            <input type="number" id="pesoReceita" step="0.01" required>
+            <label for="pesoReceita">Quantidade na Receita</label>
+            <div class="input-com-unidade">
+                <input type="number" id="pesoReceita" step="0.01" placeholder="Ex: 150" required>
+                <select id="unidadeReceita">
+                    <option value="g">g / ml</option>
+                    <option value="kg">Kg / L</option>
+                </select>
+            </div>
         </div>
 
-        <button type="submit" class="btn-add">➕ Adicionar à Lista</button>
+        <button type="submit" class="btn-add">➕ Adicionar à Receita</button>
     </form>
 
     <div class="divider"></div>
+    
+    <h3 style="font-size: 1.1em; color: #555; margin-bottom: 15px;">Ficha Técnica:</h3>
     <div id="listaIngredientes"></div>
     
     <div class="total-container">
-        <span>CUSTO TOTAL:</span>
+        <span style="color: #555; font-size: 0.9em; font-weight: 600; text-transform: uppercase;">Custo Total da Produção</span>
         <span class="total-texto" id="valorTotal">R$ 0,00</span>
     </div>
 </div>
 
 <script>
-    let total = 0;
+    let listaDeCusto = [];
+    let totalCusto = 0;
 
-    // A SOLUÇÃO INFALÍVEL: Abre a pesquisa pronta para ela ver o preço e voltar
     function consultarPreco() {
-        const item = document.getElementById('nome').value;
-        if (!item) return alert("Digite o nome do ingrediente!");
-        
-        // Abre o Google Shopping com o item já digitado
-        const url = `https://www.google.com.br/search?tbm=shop&q=${encodeURIComponent(item)}`;
-        window.open(url, '_blank');
+        const ingrediente = document.getElementById('nome').value;
+        if (!ingrediente) {
+            alert("⚠️ Digite o nome do ingrediente primeiro!");
+            document.getElementById('nome').focus();
+            return;
+        }
+        const urlBusca = `https://www.google.com.br/search?tbm=shop&q=${encodeURIComponent(ingrediente)}`;
+        window.open(urlBusca, '_blank');
     }
 
-    document.getElementById('formIngrediente').addEventListener('submit', function(e) {
-        e.preventDefault();
+    const form = document.getElementById('formIngrediente');
+    const listaHTML = document.getElementById('listaIngredientes');
+    const valorTotalHTML = document.getElementById('valorTotal');
+
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+
         const nome = document.getElementById('nome').value;
-        const preco = parseFloat(document.getElementById('precoPago').value);
-        const embalagem = parseFloat(document.getElementById('pesoEmbalagem').value);
-        const uso = parseFloat(document.getElementById('pesoReceita').value);
+        const precoPago = parseFloat(document.getElementById('precoPago').value);
+        
+        let pesoEmbalagem = parseFloat(document.getElementById('pesoEmbalagem').value);
+        const unidadeEmbalagem = document.getElementById('unidadeEmbalagem').value;
+        
+        let pesoReceita = parseFloat(document.getElementById('pesoReceita').value);
+        const unidadeReceita = document.getElementById('unidadeReceita').value;
 
-        const custoItem = (preco / embalagem) * uso;
-        total += custoItem;
+        // A Matemática Mágica de Conversão
+        if (unidadeEmbalagem === 'kg') pesoEmbalagem = pesoEmbalagem * 1000;
+        if (unidadeReceita === 'kg') pesoReceita = pesoReceita * 1000;
 
-        const lista = document.getElementById('listaIngredientes');
-        lista.innerHTML += `
-            <div class="item-lista">
-                <span>${nome} (${uso}g)</span>
-                <b>R$ ${custoItem.toFixed(2)}</b>
-            </div>
-        `;
+        const custoPorGrama = precoPago / pesoEmbalagem;
+        const custoNaReceita = custoPorGrama * pesoReceita;
 
-        document.getElementById('valorTotal').innerText = `R$ ${total.toFixed(2)}`;
-        this.reset();
+        // Salva se ela usou "g" ou "kg" para mostrar bonito na lista
+        const textoFacaoUsada = `${document.getElementById('pesoReceita').value}${unidadeReceita}`;
+
+        listaDeCusto.push({ nome, fracaoUsada: textoFacaoUsada, custoCalculado: custoNaReceita });
+        totalCusto += custoNaReceita;
+
+        renderizarLista();
+        
+        form.reset();
+        document.getElementById('nome').focus();
     });
+
+    function renderizarLista() {
+        listaHTML.innerHTML = '';
+        listaDeCusto.forEach(item => {
+            const valorFormatado = item.custoCalculado.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            const divItem = document.createElement('div');
+            divItem.className = 'item-lista';
+            divItem.innerHTML = `
+                <div class="item-detalhe">
+                    <span class="item-nome">${item.nome}</span>
+                    <span class="item-peso">Fração usada: ${item.fracaoUsada}</span>
+                </div>
+                <div class="item-valor">${valorFormatado}</div>
+            `;
+            listaHTML.appendChild(divItem);
+        });
+        valorTotalHTML.innerText = totalCusto.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    }
 </script>
 
 </body>
