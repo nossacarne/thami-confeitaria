@@ -1,0 +1,16 @@
+{
+  "name": "Calculadora de Encomendas",
+  "short_name": "Precificar",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#fdf0f5",
+  "theme_color": "#d81b60",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3142/3142690.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
